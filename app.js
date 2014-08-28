@@ -35,6 +35,8 @@ app.post("/modify", function(req, res) {
     console.log(msg);
     var sub_a = subscribers[target];
     for(var i = 0; i < sub_a.length; i++) {
+        var s = sub_a[i];
+        //if (s)
         sub_a[i].emit('message', msg);
     }
     msg += '<br> notify sent to all registered client. ';
@@ -52,8 +54,16 @@ io.on('connection', function(socket){
           //var jsondata = JSON.parse(data);
           console.log(data['target']);
           sub_a = subscribers[data['target']];
-          sub_a[sub_a.length] = socket;
-          sub_a[0].emit('message', 'thanks for register for ' + data['target']);
+          if (sub_a.length >= 10) { // max 10 client for each topic
+              sub_a[0].emit('message', 'max client reached, you are disconnected, refresh the page to reconnect');
+              for(var i = 0; i < sub_a.length - 1; i++) {
+                  sub_a[i] = sub_a[i+1];
+              }
+              sub_a[sub_a.length - 1] = socket; 
+          } else {
+              sub_a[sub_a.length] = socket;
+          }
+          sub_a[sub_a.length - 1].emit('message', 'thanks for register for ' + data['target']);
           socket.emit('sub-result', 'OK');
       });
 });

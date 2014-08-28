@@ -14,13 +14,22 @@
     </style>
   </head>
   <body>
+    <p><b> You may need refresh this page, when it doesn't work as expected.</b> </p>
     <ul id="messages"></ul>
     
 	<script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 	<script>
   		var socket = io();
-        socket.emit('subscribe', {'target': 'B'});
+       
+        socket.on('connect', function(){
+            socket.emit('subscribe', {'target': 'B'});
+        });
+
+        socket.on('disconnect', function(){
+            $('#messages').append($('<li>').text("disconnect from server"));
+        });
+
         socket.on('message', function(msg){
             $('#messages').append($('<li>').text(msg));
         });

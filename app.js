@@ -47,12 +47,14 @@ app.post("/modify", function(req, res) {
 
 
 io.on('connection', function(socket){
-      console.log('a user connected');
+      //var address = socket.handshake.address;
+      var address = socket.request.connection.remoteAddress;
+      console.log("New connection from " + address );
       socket.emit('message', 'connection to server established');
       socket.on('subscribe', function (data) {
           console.log(data);
           //var jsondata = JSON.parse(data);
-          console.log(data['target']);
+          //console.log(data['target']);
           sub_a = subscribers[data['target']];
           if (sub_a.length >= 10) { // max 10 client for each topic
               sub_a[0].emit('message', 'max client reached, you are disconnected, refresh the page to reconnect');

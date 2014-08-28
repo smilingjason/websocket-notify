@@ -37,7 +37,9 @@ app.post("/modify", function(req, res) {
     for(var i = 0; i < sub_a.length; i++) {
         sub_a[i].emit('message', msg);
     }
-    msg += '<br> notify sent to all registered client. '
+    msg += '<br> notify sent to all registered client. ';
+    msg += '<br> please switch to your register page to view the notification. ';
+    msg += '<br> <a href="modify">modify again</a>';
     res.send(msg);
 });
 
